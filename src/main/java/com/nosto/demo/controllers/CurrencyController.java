@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("v1/currency")
-public class CurrencyController extends AbstractController {
+public class CurrencyController {
 
     @Autowired
     private CurrencyService currencyService;

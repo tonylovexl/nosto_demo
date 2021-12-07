@@ -1,6 +1,6 @@
 package com.nosto.demo.controllers;
 
-import com.nosto.demo.services.CurrencyService;
+import com.nosto.demo.services.IService;
 import com.nosto.demo.vo.ErrorResponseEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
     @Autowired
-    private CurrencyService currencyService;
+    private IService service;
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseEntity> handleBusinessException(Exception e, HttpServletRequest req) {
         log.error(e.getMessage(), e);
-        ResponseEntity<ErrorResponseEntity> responseEntity = currencyService.generateParameterErrorResponseEntity(e.getMessage());
+        ResponseEntity<ErrorResponseEntity> responseEntity = service.generateParameterErrorResponseEntity(e.getMessage());
         responseEntity.getBody().setPath(req.getContextPath() + req.getServletPath());
 
         return responseEntity;

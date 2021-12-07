@@ -1,5 +1,6 @@
 package com.nosto.demo.services;
 
+import com.nosto.demo.vo.BaseResponseEntity;
 import com.nosto.demo.vo.ErrorResponseEntity;
 import com.nosto.demo.vo.SuccessResponseEntity;
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface IService {
+
+    ResponseEntity<? extends BaseResponseEntity> processCurrencyConvert(String from, String to, String amount);
 
     default ResponseEntity<ErrorResponseEntity> generateInteralErrorResponseEntity(String message) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(generateErrorResponseBody(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), message));

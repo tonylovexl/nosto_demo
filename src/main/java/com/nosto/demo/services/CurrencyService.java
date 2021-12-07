@@ -30,6 +30,7 @@ public class CurrencyService implements IService {
     @Autowired
     private LoadingCache<String, Rates> cache;
 
+    @Override
     public ResponseEntity<? extends BaseResponseEntity> processCurrencyConvert(String from, String to, String amount) {
         Rates rates;
         try {

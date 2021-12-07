@@ -1,10 +1,11 @@
 package com.nosto.demo.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nosto.demo.common.exception.BusinessException;
+import com.google.common.cache.LoadingCache;
+
 import com.nosto.demo.vo.BaseResponseEntity;
 import com.nosto.demo.vo.Rates;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.concurrent.ExecutionException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,18 +22,19 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Service
-public class CurrencyService extends AbstractService {
+public class CurrencyService implements IService {
 
     private static final String SUCCESS_RESULT_FORMAT = "%s(%s) = %s(%s)";
     private static final String INVALID_PARAMETER_FORMAT = "Invalid parameter(s): %s";
-    private static final String EXTERNAL_API_UNAVAILABLE = "The external exchange API temporarily unusable.";
-    private static final String JSON_FORMAT_ERROR = "Json format error.";
+
+    @Autowired
+    private LoadingCache<String, Rates> cache;
 
     public ResponseEntity<? extends BaseResponseEntity> processCurrencyConvert(String from, String to, String amount) {
         Rates rates;
         try {
-            rates = getRates();
-        } catch (BusinessException e) {
+            rates = cache.get("rates");
+        } catch (ExecutionException e) {
             return generateInteralErrorResponseEntity(e.getMessage());
         }
 
@@ -49,25 +52,6 @@ public class CurrencyService extends AbstractService {
         String result = concreteRate.multiply(new BigDecimal(amount)).setScale(2, RoundingMode.HALF_UP).toString();
 
         return ResponseEntity.ok(generateSuccessResponseEntity(OK, String.format(SUCCESS_RESULT_FORMAT, amount, from, result, to)));
-    }
-
-    private Rates getRates() {
-        ResponseEntity<String> entity = restTemplate.getForEntity(apiEndpoint.getExchangeRateUrl(), String.class, apiEndpoint.getExchangeRateApiKey());
-
-        if (entity.getStatusCode() != OK) {
-            log.error(EXTERNAL_API_UNAVAILABLE);
-            throw new BusinessException(EXTERNAL_API_UNAVAILABLE);
-        }
-        Rates rates;
-
-        try {
-            rates = objectMapper.readValue(entity.getBody(), Rates.class);
-            rates.getRates().put("EUR", "1");
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new BusinessException(JSON_FORMAT_ERROR);
-        }
-        return rates;
     }
 
     private BigDecimal getConcreteRate(Rates rates, String from, String to) {

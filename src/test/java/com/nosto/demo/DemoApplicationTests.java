@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class DemoApplicationTests {
 
-	//here need to be added some test cases but I have no enough time, therefore just ignore them.
+	//Here need to be added some test cases but I have no enough time, therefore just ignore them.
 
 	@Test
 	void contextLoads() {

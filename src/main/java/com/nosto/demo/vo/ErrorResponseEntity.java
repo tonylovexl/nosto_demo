@@ -2,10 +2,12 @@ package com.nosto.demo.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@EqualsAndHashCode
 public class ErrorResponseEntity extends BaseResponseEntity {
     private String error;
     @JsonInclude(JsonInclude.Include.NON_NULL)

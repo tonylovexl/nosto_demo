@@ -18,6 +18,7 @@
         <apache.commons.version>3.8.1</apache.commons.version>
         <spring.boot.aop.version>2.6.1</spring.boot.aop.version>
         <maven.compiler.plugin>3.8.0</maven.compiler.plugin>
+        <google.guava.version>31.0.1-jre</google.guava.version>
     </properties>
     <dependencies>
         <dependency>
@@ -48,6 +49,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
             <version>${spring.boot.aop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
         </dependency>
     </dependencies>
 

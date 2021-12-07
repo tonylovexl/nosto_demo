@@ -21,8 +21,8 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseEntity> handleBusinessException(Exception e, HttpServletRequest req) throws Exception {
-        log.error(e.getMessage());
+    public ResponseEntity<ErrorResponseEntity> handleBusinessException(Exception e, HttpServletRequest req) {
+        log.error(e.getMessage(), e);
         ResponseEntity<ErrorResponseEntity> responseEntity = currencyController.generateParameterErrorResponseEntity(e.getMessage());
         responseEntity.getBody().setPath(req.getContextPath() + req.getServletPath());
 
